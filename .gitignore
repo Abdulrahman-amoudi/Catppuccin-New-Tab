@@ -7,3 +7,6 @@ Thumbs.db
 # IDE files
 .vscode/
 .idea/
+
+# Build output
+*.zip

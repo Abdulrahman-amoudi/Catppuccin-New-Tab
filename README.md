@@ -7,6 +7,8 @@ A pixel-art new tab page for Chrome and other Chromium browsers. It has a small 
 
 Any style works with any theme.
 
+![Pixel style on the Mocha theme](docs/style-pixel.jpg)
+
 ## Interface styles
 
 | Style | What it looks like |
@@ -17,6 +19,12 @@ Any style works with any theme.
 | Liquid | Glass with rounder shapes and colour that slowly drifts. |
 | Crowded | Everything on one dense board, mono type, weather details always open. |
 | Simple | Flat cards with thin borders, no blur and no shadows. |
+
+| | |
+|---|---|
+| ![Minimal](docs/style-minimal.jpg) Minimal | ![Glass](docs/style-glass.jpg) Glass |
+| ![Liquid on Cyberpunk](docs/style-liquid.jpg) Liquid, Cyberpunk theme | ![Crowded on Nord](docs/style-crowded.jpg) Crowded, Nord theme |
+| ![Simple on Latte](docs/style-simple.jpg) Simple, Latte theme | ![The style menu](docs/style-menu.jpg) The style menu |
 
 To change the style, use the grid button next to the theme picker, or go to Settings → Interface Style.
 
@@ -29,6 +37,8 @@ There are 16:
 - Cyberpunk, Dracula, Nord, Sakura, Hot Pink, Toxic, Lavender
 
 ## Pets
+
+![The six pixel pets](docs/pets.gif)
 
 The pets are drawn in pixel art on a canvas. Each one blinks, breathes and has its own small move:
 
