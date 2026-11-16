@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Catppuccin Bongo New Tab",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "A pixel-art new tab: an LCD clock, a night-sky village, hand-drawn pets you can drag around, six interface styles and 16 colour themes.",
   "chrome_url_overrides": {
     "newtab": "index.html"

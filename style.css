@@ -1345,3 +1345,14 @@ html[data-ui-style="pixel"] .desk-foot {
     padding: 8px 12px; color: var(--ink-2);
     background: var(--bg-deep); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cat-text) 8%, var(--bg-deep));
 }
+
+/* Pixel icons (pixel-icons.js): Pixel and Crowded use the 16px set, everything
+   else keeps the smooth icons. Sizes stay on whole multiples of 16 so cells stay square. */
+.icon-px { display: none; }
+html:is([data-ui-style="pixel"], [data-ui-style="crowded"]) .icon-smooth { display: none !important; }
+html:is([data-ui-style="pixel"], [data-ui-style="crowded"]) .icon-px { display: inline-block; width: 16px; height: 16px; flex: 0 0 auto; }
+html:is([data-ui-style="pixel"], [data-ui-style="crowded"]) :is(.shortcut-icon, .weather-icon-box, .preview-icon-box) .icon-px { width: 32px; height: 32px; }
+html:is([data-ui-style="pixel"], [data-ui-style="crowded"])[data-shortcut-shape="oval"] .shortcut-icon .icon-px { width: 16px; height: 16px; }
+html[data-ui-style="crowded"] .weather-icon-box .icon-px { width: 16px; height: 16px; }
+html:is([data-ui-style="pixel"], [data-ui-style="crowded"]) .action-shortcut-btn .icon-px { width: 16px; height: 16px; }
+.desk-search { position: relative; z-index: 6; }

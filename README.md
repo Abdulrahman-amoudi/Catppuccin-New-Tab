@@ -67,6 +67,7 @@ The layout is a single column, so it also works on a vertical monitor.
   - edit or delete them on hover
   - choose rounded, square, circle or pill
 - Notes, saved on this device
+- A 16px pixel icon set for the toolbar, search engines, shortcuts and weather in Pixel and Crowded. The weather icon follows the real weather.
 - Background image, video or YouTube link
 - Star particles and ambient sounds
 
@@ -89,4 +90,5 @@ The fonts are bundled in `fonts/`, so the page doesn't need Google Fonts and loo
 | `pixel-pets.js` | The sprites and their animation |
 | `pet-drag.js` | Moving the pet around |
 | `desk.js` | The LCD clock, the pixel horizon and the number keys |
+| `pixel-icons.js` | The pixel icon set |
 | `script.js` | Everything else: clock, weather, search, shortcuts, notes, settings and background |
