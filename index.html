@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Tab | Catppuccin</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="ui-style.js"></script>
 </head>
 <body>
     <!-- Animated Video / YouTube / Wallpaper / Canvas & Overlay -->
@@ -18,42 +15,16 @@
     <canvas id="bgCanvas"></canvas>
     <div class="bg-overlay"></div>
 
-    <div class="app-container">
-        <!-- Top Bar Header -->
-        <header class="top-header">
-            <div class="header-left">
-                <!-- Theme Palette Dropdown Switcher (15 Themes) -->
-                <div class="theme-selector-dropdown">
-                    <button class="theme-dropdown-btn" id="themeDropdownBtn" title="Change Theme Palette">
-                        <span class="theme-active-dot" id="themeActiveDot"></span>
-                        <span class="theme-active-label" id="themeActiveLabel">Mocha</span>
-                        <svg class="svg-icon arrow-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                    </button>
-                    <div class="theme-menu" id="themeMenu">
-                        <div class="theme-menu-group-title">Catppuccin Palettes</div>
-                        <div class="theme-option active" data-flavor="mocha"><span class="dot mocha-dot"></span> Mocha (Dark)</div>
-                        <div class="theme-option" data-flavor="macchiato"><span class="dot macchiato-dot"></span> Macchiato</div>
-                        <div class="theme-option" data-flavor="frappe"><span class="dot frappe-dot"></span> Frappé</div>
-                        <div class="theme-option" data-flavor="latte"><span class="dot latte-dot"></span> Latte (Light)</div>
-                        
-                        <div class="theme-menu-group-title">Custom Aesthetic Themes</div>
-                        <div class="theme-option" data-flavor="forest-green"><span class="dot forest-dot"></span> Forest Green</div>
-                        <div class="theme-option" data-flavor="cozy-orange"><span class="dot orange-dot"></span> Cozy Orange</div>
-                        <div class="theme-option" data-flavor="samurai-red"><span class="dot samurai-dot"></span> Samurai Red</div>
-                        <div class="theme-option" data-flavor="sky-blue"><span class="dot sky-dot"></span> Sky Blue</div>
-                        <div class="theme-option" data-flavor="dark-blue"><span class="dot darkblue-dot"></span> Dark Blue</div>
-                        <div class="theme-option" data-flavor="cyberpunk"><span class="dot cyberpunk-dot"></span> Cyberpunk Neon</div>
-                        <div class="theme-option" data-flavor="dracula"><span class="dot dracula-dot"></span> Dracula Dark</div>
-                        <div class="theme-option" data-flavor="nord"><span class="dot nord-dot"></span> Nordic Frost</div>
-                        <div class="theme-option" data-flavor="sakura"><span class="dot sakura-dot"></span> Sakura Rose Gold</div>
-                        <div class="theme-option" data-flavor="hot-pink"><span class="dot hot-pink-dot"></span> Hot Pink</div>
-                        <div class="theme-option" data-flavor="toxic"><span class="dot toxic-dot"></span> Toxic Poison Green</div>
-                        <div class="theme-option" data-flavor="midnight-lavender"><span class="dot lavender-dot"></span> Midnight Lavender</div>
-                    </div>
+    <div class="desk">
+        <header class="desk-top">
+            <div class="clock-block">
+                <div class="time-display" id="timeDisplay">12:00</div>
+                <div class="clock-meta">
+                    <span class="date-display" id="dateDisplay">Today</span>
+                    <span class="greeting-display" id="greetingDisplay">Welcome back</span>
                 </div>
             </div>
-            <div class="header-right">
-                <!-- Weather Widget & Detailed Popup Card -->
+            <div class="desk-controls">
                 <div class="weather-widget-container">
                     <div class="weather-widget" id="weatherWidget" title="Click for detailed forecast">
                         <span class="weather-icon-box" id="weatherIcon">
@@ -87,9 +58,43 @@
                         </div>
                     </div>
                 </div>
+                <div class="tool-row">
+                    <div class="theme-selector-dropdown">
+                    <button class="theme-dropdown-btn" id="themeDropdownBtn" title="Change Theme Palette">
+                        <span class="theme-active-dot" id="themeActiveDot"></span>
+                        <span class="theme-active-label" id="themeActiveLabel">Mocha</span>
+                        <svg class="svg-icon arrow-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    </button>
+                    <div class="theme-menu" id="themeMenu">
+                        <div class="theme-menu-group-title">Catppuccin Palettes</div>
+                        <div class="theme-option active" data-flavor="mocha"><span class="dot mocha-dot"></span> Mocha (Dark)</div>
+                        <div class="theme-option" data-flavor="macchiato"><span class="dot macchiato-dot"></span> Macchiato</div>
+                        <div class="theme-option" data-flavor="frappe"><span class="dot frappe-dot"></span> Frappé</div>
+                        <div class="theme-option" data-flavor="latte"><span class="dot latte-dot"></span> Latte (Light)</div>
+                        
+                        <div class="theme-menu-group-title">Custom Aesthetic Themes</div>
+                        <div class="theme-option" data-flavor="forest-green"><span class="dot forest-dot"></span> Forest Green</div>
+                        <div class="theme-option" data-flavor="cozy-orange"><span class="dot orange-dot"></span> Cozy Orange</div>
+                        <div class="theme-option" data-flavor="samurai-red"><span class="dot samurai-dot"></span> Samurai Red</div>
+                        <div class="theme-option" data-flavor="sky-blue"><span class="dot sky-dot"></span> Sky Blue</div>
+                        <div class="theme-option" data-flavor="dark-blue"><span class="dot darkblue-dot"></span> Dark Blue</div>
+                        <div class="theme-option" data-flavor="cyberpunk"><span class="dot cyberpunk-dot"></span> Cyberpunk Neon</div>
+                        <div class="theme-option" data-flavor="dracula"><span class="dot dracula-dot"></span> Dracula Dark</div>
+                        <div class="theme-option" data-flavor="nord"><span class="dot nord-dot"></span> Nordic Frost</div>
+                        <div class="theme-option" data-flavor="sakura"><span class="dot sakura-dot"></span> Sakura Rose Gold</div>
+                        <div class="theme-option" data-flavor="hot-pink"><span class="dot hot-pink-dot"></span> Hot Pink</div>
+                        <div class="theme-option" data-flavor="toxic"><span class="dot toxic-dot"></span> Toxic Poison Green</div>
+                        <div class="theme-option" data-flavor="midnight-lavender"><span class="dot lavender-dot"></span> Midnight Lavender</div>
+                    </div>
+                </div>
+                    <!-- Interface style switcher -->
+                    <div class="style-tool-wrapper">
+                        <button class="icon-btn-circle" id="styleBtn" title="Interface style" aria-haspopup="true" aria-expanded="false">
+                            <svg class="svg-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm8-2h8v8h-8v-8z"/></svg>
+                        </button>
+                        <div class="style-menu" id="styleMenu" role="menu"></div>
+                    </div>
 
-                <!-- Header Tools Controls -->
-                <div class="header-tools">
                     <!-- Live Photo / Video Background Toggle Button -->
                     <button class="icon-btn-circle" id="toggleWallpaperBtn" title="Toggle Custom Background Wallpaper / Video">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
@@ -116,11 +121,11 @@
             </div>
         </header>
 
-        <!-- Main Content Center -->
-        <main class="main-content">
-            <!-- Zei's Cat Image -->
+        <section class="desk-search">
+            <div class="companion-perch">
+                <!-- Zei's Cat Image -->
             <div class="ascii-cat-container" id="asciiCatContainer">
-                <img id="catImage" class="cat-image" alt="Zei Cat" src="animal_cat.png">
+                <canvas class="pixel-pet" data-pet="cat" role="img" aria-label="Pixel cat"></canvas>
             </div>
 
             <!-- Bongo Cat SVG Animation -->
@@ -183,15 +188,7 @@
                     </g>
                 </svg>
             </div>
-
-            <!-- Time & Greeting -->
-            <div class="clock-section">
-                <div class="time-display" id="timeDisplay">12:00</div>
-                <div class="date-display" id="dateDisplay">Today</div>
-                <div class="greeting-display" id="greetingDisplay">Welcome back</div>
             </div>
-
-            <!-- Search Bar with Engine Switcher Dropdown -->
             <div class="search-container">
                 <form id="searchForm" class="search-form">
                     <div class="engine-dropdown">
@@ -230,21 +227,31 @@
                     </button>
                 </form>
             </div>
+        </section>
 
-            <!-- Shortcuts Grid (Nighttab Style) -->
-            <section class="shortcuts-section">
+        <section class="desk-grid">
+            <div class="tile tile-links">
+                <div class="tile-head">
+                    <span class="tile-title">Shortcuts</span>
+                    <button type="button" class="tile-action" id="addShortcutBtn" title="Add shortcut">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        <span>Add</span>
+                    </button>
+                </div>
                 <div class="shortcuts-grid" id="shortcutsGrid"></div>
-                <button type="button" class="add-shortcut-btn" id="addShortcutBtn" title="Add New Shortcut">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                </button>
-            </section>
-        </main>
-
-        <footer class="bottom-footer">
-            <div class="quote-container">
-                <span class="quote-text" id="quoteText">"Simplicity is the soul of efficiency."</span>
-                <span class="quote-author" id="quoteAuthor">- Austin Freeman</span>
             </div>
+            <div class="tile tile-notes">
+                <div class="tile-head">
+                    <span class="tile-title">Notes</span>
+                    <span class="tile-hint">saved on this device</span>
+                </div>
+                <textarea id="notesTextarea" class="notes-area" placeholder="Jot something down…" spellcheck="false"></textarea>
+            </div>
+        </section>
+
+        <footer class="desk-foot">
+            <span class="quote-text" id="quoteText">"Simplicity is the soul of efficiency."</span>
+            <span class="quote-author" id="quoteAuthor">- Austin Freeman</span>
         </footer>
     </div>
 
@@ -320,18 +327,28 @@
                 <!-- Companion -->
                 <div class="setting-card">
                     <div class="setting-card-left">
-                        <span class="setting-card-label">Pixel Animal Companion</span>
-                        <span class="setting-card-desc">Choose your line-art companion</span>
+                        <span class="setting-card-label">Companion</span>
+                        <span class="setting-card-desc">Pixel pets are animated. Click one to make it hop.</span>
                     </div>
                     <select id="settingCompanion" class="setting-select">
-                        <option value="cat">Zei's Cat</option>
-                        <option value="bongo">Bongo Cat (Interactive)</option>
-                        <option value="giraffe">Giraffe</option>
+                        <option value="cat">Pixel Cat</option>
+                        <option value="dog">Pixel Dog</option>
                         <option value="panda">Pixel Panda</option>
-                        <option value="dog">Line-Art Dog</option>
-                        <option value="whale">Minimalist Whale</option>
-                        <option value="none">None (Hidden)</option>
+                        <option value="bunny">Pixel Bunny</option>
+                        <option value="giraffe">Pixel Giraffe</option>
+                        <option value="whale">Pixel Whale</option>
+                        <option value="bongo">Bongo Cat (reacts to typing)</option>
+                        <option value="none">None</option>
                     </select>
+                </div>
+
+                <!-- Interface style -->
+                <div class="setting-card">
+                    <div class="setting-card-left">
+                        <span class="setting-card-label">Interface Style</span>
+                        <span class="setting-card-desc">Changes instantly. Works with every colour theme.</span>
+                    </div>
+                    <select id="settingUiStyle" class="setting-select"></select>
                 </div>
 
                 <!-- Theme -->
@@ -461,6 +478,7 @@
         </div>
     </div>
 
+    <script src="pixel-pets.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

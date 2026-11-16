@@ -1,46 +1,74 @@
-# 🐱 Catppuccin Bongo & Zei's Minimal ASCII Cat New Tab
+# Catppuccin New Tab
 
-A sleek, modern Chrome/Chromium New Tab extension featuring **Zei's Minimal ASCII Cat** & **Interactive Bongo Cat**, built with **Catppuccin** color palettes (Mocha, Macchiato, Frappé, Latte), custom background video & wallpaper support, floating star particle effects, a search engine switcher, quick shortcuts grid, mechanical keyboard sound effects, and a live weather widget.
+A pixel-art new tab page for Chrome and other Chromium browsers. It has a small animated pet sitting on your search bar, a desk of tiles around it, and two independent switches for the look:
 
----
+- **Interface style:** how things are shaped.
+- **Colour theme:** what colours they use.
 
-## ✨ Features
+Any style works with any theme.
 
-- 🐱 **Dual Cat Modes:** Switch seamlessly between **Zei's Minimal ASCII Cat** and **Interactive Bongo Cat** (reacts to typing & clicking!).
-- 🎨 **Catppuccin Color Schemes:** Built-in support for Mocha, Macchiato, Frappé, and Latte.
-- 🎬 **Custom Image & Video Backgrounds:** Upload custom MP4/WebM videos or images (PNG, JPG, GIF) from your PC using an **IndexedDB Media Engine** with zero size limits.
-- 🌌 **Ambient Star Particles:** Animated floating star canvas that overlays on top of your background wallpapers and videos.
-- ⚙️ **Full Settings Panel:** Customize time format (12h/24h), custom weather city location, background media layers, sound toggles, and color themes.
-- 🔊 **Mechanical Keyboard Audio:** Synthesized key click sound effects while typing in the search bar.
-- 🔍 **Multi-Engine Search Bar:** Quick engine switching (Google, DuckDuckGo, YouTube, GitHub, Reddit, Perplexity AI).
-- 🔗 **Quick Shortcuts Grid:** Add, manage, and delete custom site bookmarks with custom icons.
-- 📝 **Scratchpad Notes:** Quick drawer for jotting down notes automatically saved to `localStorage`.
+## Interface styles
 
----
+| Style | What it looks like |
+|---|---|
+| Pixel | Chunky 8-bit panels, notched corners, hard drop shadows, a dithered sky. This is the default. |
+| Minimal | Only the clock, the search bar and a quiet row of shortcuts. The tools fade out until you hover them. |
+| Glass | Frosted panels over soft pools of colour. |
+| Liquid | Glass with rounder shapes and colour that slowly drifts. |
+| Crowded | Everything on one dense board, mono type, weather details always open. |
+| Simple | Flat cards with thin borders, no blur and no shadows. |
 
-## 🚀 Installation Guide
+To change the style, use the grid button next to the theme picker, or go to Settings → Interface Style.
 
-1. Clone or download this repository:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/Catppuccin-New-Tab.git
-   ```
-2. Open Google Chrome or any Chromium browser (Brave, Edge, Vivaldi, Arc).
-3. Navigate to **`chrome://extensions`**.
-4. Enable **Developer mode** (toggle in the top-right corner).
-5. Click **Load unpacked** and select the `Catppuccin-New-Tab` folder.
-6. Open a new tab (`Ctrl + T`) and enjoy! 🎉
+## Colour themes
 
----
+There are 16:
 
-## 🛠️ Built With
+- Catppuccin: Mocha, Macchiato, Frappé, Latte
+- Forest, Orange, Samurai Red, Sky Blue, Dark Blue
+- Cyberpunk, Dracula, Nord, Sakura, Hot Pink, Toxic, Lavender
 
-* HTML5, CSS3, JavaScript (Vanilla MV3 Web Extension)
-* IndexedDB (High-Capacity Local Media Storage)
-* Google Fonts (JetBrains Mono & Outfit)
-* Open-Meteo Weather API
+## Pets
 
----
+The pets are drawn in pixel art on a canvas. Each one blinks, breathes and has its own small move:
 
-## 📄 License
+- Cat: swishes its tail.
+- Dog: wags its tail and pants.
+- Panda: has a blinking eye glint.
+- Bunny: wiggles its ears.
+- Giraffe: sways its neck.
+- Whale: floats and spouts.
 
-MIT License - feel free to use and customize!
+Click a pet to make it hop. The pets recolour themselves to match the theme. The old SVG Bongo Cat is still in the list, and you can also pick none.
+
+## Everything else
+
+- Clock (12h or 24h, any timezone), date and greeting
+- Weather for any city. It uses Open-Meteo, so no key is needed.
+- Search across several engines
+- Shortcuts with brand icons:
+  - drag to reorder them
+  - edit or delete them on hover
+  - choose oval, rounded, circle or square
+- Notes, saved on this device
+- Background image, video or YouTube link
+- Star particles and ambient sounds
+
+The fonts are bundled in `fonts/`, so the page doesn't need Google Fonts and looks the same offline. They are all SIL Open Font License; the licences are next to the font files.
+
+## Install
+
+1. Download or clone this repo.
+2. Open `chrome://extensions` and turn on **Developer mode**.
+3. Click **Load unpacked** and pick the repo folder.
+4. Open a new tab.
+
+## Files
+
+| File | What it holds |
+|---|---|
+| `index.html` | The layout |
+| `style.css` | The themes (`data-theme`) and the interface styles (`data-ui-style`) |
+| `ui-style.js` | The style switcher. It loads in `<head>` so the page doesn't flash. |
+| `pixel-pets.js` | The sprites and their animation |
+| `script.js` | Everything else: clock, weather, search, shortcuts, notes, settings and background |

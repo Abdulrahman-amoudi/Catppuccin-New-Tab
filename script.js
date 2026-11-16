@@ -102,12 +102,15 @@ function mainInit() {
     const asciiCatContainer = document.getElementById('asciiCatContainer');
     const settingCompanionSelect = document.getElementById('settingCompanion');
 
+    // Hand-drawn pixel pets, animated by pixel-pets.js (click one to make it hop)
+    const pet = (kind, label) => `<canvas class="pixel-pet" data-pet="${kind}" role="img" aria-label="${label}"></canvas>`;
     const animalGraphics = {
-        cat: `<img id="catImage" class="cat-image" alt="Zei Cat" src="animal_cat.png">`,
-        giraffe: `<img id="catImage" class="cat-image animal-giraffe" alt="Giraffe" src="animal_giraffe.png">`,
-        panda: `<img id="catImage" class="cat-image animal-panda" alt="Pixel Panda" src="animal_panda.png">`,
-        dog: `<img id="catImage" class="cat-image animal-dog" alt="Line-Art Dog" src="animal_dog.png">`,
-        whale: `<img id="catImage" class="cat-image animal-whale" alt="Minimalist Whale" src="animal_whale.png">`,
+        cat: pet('cat', 'Pixel cat'),
+        dog: pet('dog', 'Pixel dog'),
+        panda: pet('panda', 'Pixel panda'),
+        bunny: pet('bunny', 'Pixel bunny'),
+        giraffe: pet('giraffe', 'Pixel giraffe'),
+        whale: pet('whale', 'Pixel whale'),
         none: ``
     };
 
@@ -127,8 +130,10 @@ function mainInit() {
         } else {
             if (bongoCatContainer) bongoCatContainer.classList.add('hidden');
             if (asciiCatContainer) {
+                asciiCatContainer.querySelectorAll('canvas.pixel-pet').forEach(c => window.PixelPets && window.PixelPets.unmount(c));
                 asciiCatContainer.innerHTML = animalGraphics[companionKey];
                 asciiCatContainer.classList.remove('hidden');
+                if (window.PixelPets) window.PixelPets.mountAll(asciiCatContainer);
             }
         }
 
@@ -1570,10 +1575,12 @@ function mainInit() {
     // Close Modals on ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            closeModal();
+            if (modalOverlay) modalOverlay.classList.remove('open');
             closeSettingsModal();
-            closeNotesDrawer();
             if (engineMenu) engineMenu.classList.remove('open');
+            if (engineDropdown) engineDropdown.classList.remove('open');
+            document.querySelectorAll('.theme-selector-dropdown.open, .ambient-tool-wrapper.open, .weather-widget-container.open')
+                .forEach(el => el.classList.remove('open'));
         }
     });
 
@@ -1684,13 +1691,19 @@ function mainInit() {
                 ctx.fillStyle = activeParticleColor || '#b4bfe7';
                 ctx.globalAlpha = opacity * 0.8;
                 
-                // Add beautiful glowing shadow to particles
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = activeParticleColor || '#b4bfe7';
-
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-                ctx.fill();
+                const uiStyle = document.documentElement.getAttribute('data-ui-style') || 'pixel';
+                if (uiStyle === 'pixel' || uiStyle === 'crowded') {
+                    // square, unblurred "pixel" stars snapped to a 3px grid
+                    ctx.shadowBlur = 0;
+                    const size = s.radius > 1.2 ? 4 : 2;
+                    ctx.fillRect(Math.round(s.x / 3) * 3, Math.round(s.y / 3) * 3, size, size);
+                } else {
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = activeParticleColor || '#b4bfe7';
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             });
 
             // Reset shadow so it doesn't leak to other canvas drawings

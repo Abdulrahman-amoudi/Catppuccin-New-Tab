@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Catppuccin Bongo New Tab",
-  "version": "2.5.0",
-  "description": "A premium glassmorphic new tab extension featuring animal companions, 15 customizable themes, and live weather forecast.",
+  "version": "3.0.0",
+  "description": "A pixel-art new tab with animated pets, six interface styles and 16 colour themes. Clock, weather, search, shortcuts and notes.",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
