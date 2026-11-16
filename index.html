@@ -233,7 +233,7 @@
             <div class="tile tile-links">
                 <div class="tile-head">
                     <span class="tile-title">Shortcuts</span>
-                    <button type="button" class="tile-action" id="addShortcutBtn" title="Add shortcut">
+                    <button type="button" class="tile-action" id="addShortcutBtn" title="Add shortcut" aria-label="Add shortcut">
                         <svg class="svg-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                         <span>Add</span>
                     </button>
@@ -328,16 +328,14 @@
                 <div class="setting-card">
                     <div class="setting-card-left">
                         <span class="setting-card-label">Companion</span>
-                        <span class="setting-card-desc">Pixel pets are animated. Click one to make it hop.</span>
+                        <span class="setting-card-desc">Drag your pet anywhere; double-click sends it back. Click to make it hop.</span>
                     </div>
                     <select id="settingCompanion" class="setting-select">
-                        <option value="cat">Pixel Cat</option>
-                        <option value="dog">Pixel Dog</option>
-                        <option value="panda">Pixel Panda</option>
-                        <option value="bunny">Pixel Bunny</option>
-                        <option value="giraffe">Pixel Giraffe</option>
-                        <option value="whale">Pixel Whale</option>
-                        <option value="bongo">Bongo Cat (reacts to typing)</option>
+                        <option value="cat">Ginger cat</option>
+                        <option value="blackcat">Black cat</option>
+                        <option value="dog">Shiba</option>
+                        <option value="bunny">Bunny</option>
+                        <option value="bongo">Bongo cat (reacts to typing)</option>
                         <option value="none">None</option>
                     </select>
                 </div>
@@ -406,14 +404,14 @@
                 <!-- Shortcut Shape -->
                 <div class="setting-card">
                     <div class="setting-card-left">
-                        <span class="setting-card-label">Bookmark Card Shape</span>
-                        <span class="setting-card-desc">Oval, Rounded, Circle, or Square</span>
+                        <span class="setting-card-label">Shortcut shape</span>
+                        <span class="setting-card-desc">Keys 1–9 open the first nine shortcuts.</span>
                     </div>
                     <select id="settingShortcutShape" class="setting-select">
-                        <option value="oval">Oval / Capsule</option>
-                        <option value="rounded">Rounded Box</option>
-                        <option value="circle">Circle</option>
+                        <option value="rounded">Rounded</option>
                         <option value="square">Square</option>
+                        <option value="circle">Circle</option>
+                        <option value="oval">Pill with name</option>
                     </select>
                 </div>
 
@@ -480,5 +478,7 @@
 
     <script src="pixel-pets.js"></script>
     <script src="script.js"></script>
+    <script src="pet-drag.js"></script>
+    <script src="desk.js"></script>
 </body>
 </html>

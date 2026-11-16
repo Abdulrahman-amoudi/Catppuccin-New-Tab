@@ -55,7 +55,8 @@ function mainInit() {
         soundEnabled: localStorage.getItem('soundEnabled') === 'true',
         clockFormat: localStorage.getItem('catClockFormat') || '24',
         timezone: localStorage.getItem('catTimezone') || 'auto',
-        shortcutShape: localStorage.getItem('catShortcutShape') || 'oval',
+        // v3 moved shortcuts to a hotbar of square slots; reset the old pill default once
+        shortcutShape: (localStorage.getItem('catLayoutV3') ? localStorage.getItem('catShortcutShape') : (localStorage.setItem('catLayoutV3', '1'), null)) || 'rounded',
         searchEngine: localStorage.getItem('searchEngine') || 'google',
         shortcuts: JSON.parse(localStorage.getItem('shortcuts')) || [
             { id: '1', title: 'YouTube', url: 'https://youtube.com', icon: 'youtube' },
@@ -105,12 +106,10 @@ function mainInit() {
     // Hand-drawn pixel pets, animated by pixel-pets.js (click one to make it hop)
     const pet = (kind, label) => `<canvas class="pixel-pet" data-pet="${kind}" role="img" aria-label="${label}"></canvas>`;
     const animalGraphics = {
-        cat: pet('cat', 'Pixel cat'),
-        dog: pet('dog', 'Pixel dog'),
-        panda: pet('panda', 'Pixel panda'),
-        bunny: pet('bunny', 'Pixel bunny'),
-        giraffe: pet('giraffe', 'Pixel giraffe'),
-        whale: pet('whale', 'Pixel whale'),
+        cat: pet('cat', 'Ginger cat'),
+        blackcat: pet('blackcat', 'Black cat'),
+        dog: pet('dog', 'Shiba'),
+        bunny: pet('bunny', 'Bunny'),
         none: ``
     };
 

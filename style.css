@@ -524,24 +524,21 @@ html[data-ui-style="pixel"] {
     --panel: var(--fill);
     --panel-border: none;
     --panel-shadow:
-        0 calc(var(--px) * -1) 0 0 var(--line-2),
-        0 var(--px) 0 0 var(--line-2),
-        calc(var(--px) * -1) 0 0 0 var(--line-2),
-        var(--px) 0 0 0 var(--line-2),
-        var(--px) calc(var(--px) * 2) 0 0 var(--bg-deep),
-        calc(var(--px) * 2) var(--px) 0 0 var(--bg-deep);
+        0 0 0 3px var(--bg-deep),
+        inset 3px 3px 0 0 color-mix(in srgb, var(--cat-text) 9%, transparent),
+        inset -3px -3px 0 0 color-mix(in srgb, var(--bg-deep) 55%, transparent);
     --panel-blur: none;
     --ctl: var(--fill-2);
     --ctl-border: none;
     --ctl-shadow:
-        0 -3px 0 0 var(--line-2), 0 3px 0 0 var(--line-2),
-        -3px 0 0 0 var(--line-2), 3px 0 0 0 var(--line-2),
-        3px 6px 0 0 var(--bg-deep), 6px 3px 0 0 var(--bg-deep);
+        0 0 0 3px var(--bg-deep),
+        inset 3px 3px 0 0 color-mix(in srgb, var(--cat-text) 10%, transparent),
+        inset -3px -3px 0 0 color-mix(in srgb, var(--bg-deep) 50%, transparent);
     --ctl-shadow-hover:
-        0 -3px 0 0 var(--accent), 0 3px 0 0 var(--accent),
-        -3px 0 0 0 var(--accent), 3px 0 0 0 var(--accent),
-        3px 6px 0 0 var(--bg-deep), 6px 3px 0 0 var(--bg-deep);
-    --ctl-press: translate(3px, 3px);
+        0 0 0 3px var(--accent),
+        inset 3px 3px 0 0 color-mix(in srgb, var(--cat-text) 14%, transparent),
+        inset -3px -3px 0 0 color-mix(in srgb, var(--bg-deep) 50%, transparent);
+    --ctl-press: translateY(3px);
     --ease: steps(3, end);
 }
 
@@ -685,14 +682,19 @@ body::before {
     content: '';
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
 }
-/* pixel: ordered dither that darkens toward the bottom, plus a stepped horizon */
+/* pixel: a night sky in hard bands, darkest at the top. The horizon is drawn by desk.js. */
 html[data-ui-style="pixel"] body::before, html:not([data-ui-style]) body::before {
-    background:
-        linear-gradient(to bottom, transparent 0 78%, color-mix(in srgb, var(--bg-deep) 35%, transparent) 78% 84%, color-mix(in srgb, var(--bg-deep) 60%, transparent) 84% 90%, var(--bg-deep) 90%),
-        repeating-conic-gradient(color-mix(in srgb, var(--bg-deep) 45%, transparent) 0 25%, transparent 0 50%) 0 0 / 4px 4px;
-    -webkit-mask: linear-gradient(to bottom, rgba(0,0,0,.35), #000);
-            mask: linear-gradient(to bottom, rgba(0,0,0,.35), #000);
+    background: linear-gradient(to bottom,
+        color-mix(in srgb, var(--bg-deep) 80%, var(--bg)) 0 12%,
+        color-mix(in srgb, var(--bg-deep) 55%, var(--bg)) 12% 24%,
+        color-mix(in srgb, var(--bg-deep) 30%, var(--bg)) 24% 36%,
+        var(--bg) 36%);
 }
+.pixel-horizon {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 4; pointer-events: none;
+    image-rendering: pixelated;
+}
+.pixel-horizon[hidden] { display: none; }
 html[data-ui-style="crowded"] body::before {
     background: repeating-conic-gradient(color-mix(in srgb, var(--bg-deep) 35%, transparent) 0 25%, transparent 0 50%) 0 0 / 4px 4px;
 }
@@ -783,22 +785,38 @@ html[data-ui-style="pixel"] :is(.search-submit-btn, .btn-save, .btn-settings-sav
 
 /* ==========================================================================
    LAYOUT (desk)
+   One centred column: clock, pet on the search bar, shortcut hotbar.
+   Weather and tools sit in the top corners, notes pinned bottom-right.
+   Crowded replaces this with its own board further down.
    ========================================================================== */
 .desk {
     position: relative; z-index: 10;
-    width: min(1180px, 100% - 48px);
-    min-height: 100vh;
+    width: min(1240px, 100% - 48px);
+    min-height: 100vh; min-height: 100dvh;
     margin: 0 auto;
-    padding: 40px 0 28px;
+    padding: 28px 0;
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto auto;
-    gap: var(--gap);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 720px) minmax(0, 1fr);
+    grid-template-rows: auto minmax(24px, 1fr) auto auto auto minmax(24px, 1fr) auto;
+    grid-template-areas:
+        "wx    .      ctrl"
+        ".     .      .   "
+        ".     clock  .   "
+        ".     search .   "
+        ".     links  notes"
+        ".     .      notes"
+        "foot  .      notes";
+    column-gap: 32px;
 }
+html:not([data-ui-style="crowded"]) :is(.desk-top, .desk-controls, .desk-grid) { display: contents; }
+.weather-widget-container { grid-area: wx; justify-self: start; align-self: start; }
+.tool-row { grid-area: ctrl; justify-self: end; align-self: start; display: flex; align-items: center; gap: 10px; }
+.clock-block { grid-area: clock; display: flex; flex-direction: column; align-items: center; gap: 14px; margin-bottom: clamp(20px, 5vh, 56px); text-align: center; }
+.desk-search { grid-area: search; display: flex; flex-direction: column; align-items: center; width: 100%; }
+.tile-links { grid-area: links; }
+.tile-notes { grid-area: notes; justify-self: end; align-self: end; }
+.desk-foot { grid-area: foot; align-self: end; justify-self: start; }
 
-/* top: clock left, controls right */
-.desk-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
-.clock-block { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .time-display {
     font-family: var(--font-clock);
     font-size: var(--clock-size);
@@ -809,45 +827,45 @@ html[data-ui-style="pixel"] :is(.search-submit-btn, .btn-save, .btn-settings-sav
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
-html[data-ui-style="pixel"] .time-display {
-    text-shadow: 4px 4px 0 var(--bg-deep), 8px 8px 0 color-mix(in srgb, var(--accent) 45%, transparent);
-}
+/* Pixel draws the clock on an LCD canvas (desk.js); the text stays for screen readers */
+.lcd-clock { display: none; }
+html.has-lcd .lcd-clock { display: block; image-rendering: pixelated; }
+html.has-lcd .time-display { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 html[data-ui-style="liquid"] .time-display {
     background: linear-gradient(180deg, #fff 10%, color-mix(in srgb, var(--accent) 70%, #fff) 90%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
     filter: drop-shadow(0 10px 30px color-mix(in srgb, var(--accent) 50%, transparent));
 }
-.clock-meta { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding-left: 4px; }
-.date-display { font-size: 1.25rem; font-weight: 600; color: var(--accent); }
+.clock-meta { display: flex; align-items: baseline; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.date-display { font-size: 1.2rem; font-weight: 600; color: var(--ink); }
 .greeting-display { font-size: 1.05rem; color: var(--ink-2); }
+html[data-ui-style="pixel"] .date-display { color: var(--accent); }
 
-.desk-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; flex: 0 0 auto; }
-.tool-row { display: flex; align-items: center; gap: 10px; }
-
-/* middle: pet perched on the search bar */
-.desk-search { align-self: end; display: flex; flex-direction: column; align-items: center; width: min(760px, 100%); margin: 0 auto; }
-.companion-perch { position: relative; z-index: 2; display: flex; justify-content: center; margin-bottom: -10px; min-height: 40px; }
+.companion-perch { position: relative; z-index: 2; display: flex; justify-content: center; margin-bottom: -6px; min-height: 40px; touch-action: none; }
 .search-container { width: 100%; position: relative; z-index: 1; }
 
-/* bottom: tiles */
-.desk-grid { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(260px, 1fr); gap: var(--gap); align-items: stretch; }
-
-.desk-foot { display: flex; justify-content: center; align-items: baseline; gap: 10px; flex-wrap: wrap; text-align: center; color: var(--ink-2); font-size: .95rem; }
+.desk-foot { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; max-width: 46ch; color: var(--ink-3); font-size: .85rem; line-height: 1.4; }
 .quote-text { font-style: italic; }
-.quote-author { color: var(--accent); font-weight: 600; }
+.quote-author { color: var(--ink-2); }
 html[data-ui-style="pixel"] .quote-text { font-style: normal; }
 
 /* ==========================================================================
    COMPANIONS
    ========================================================================== */
-.ascii-cat-container { display: flex; align-items: flex-end; justify-content: center; cursor: pointer; }
-.pixel-pet { --pet-size: 150px; display: block; image-rendering: pixelated; image-rendering: crisp-edges; cursor: pointer; }
-html[data-ui-style="minimal"] .pixel-pet { --pet-size: 110px; }
-html[data-ui-style="crowded"] .pixel-pet { --pet-size: 110px; }
-html:not([data-ui-style="pixel"]):not([data-ui-style="crowded"]) .pixel-pet { filter: drop-shadow(0 12px 18px rgba(0,0,0,.35)); }
-.bongo-container { width: 300px; height: 190px; cursor: pointer; }
+.ascii-cat-container { display: flex; align-items: flex-end; justify-content: center; cursor: grab; }
+.pixel-pet { --pet-size: 120px; display: block; image-rendering: pixelated; image-rendering: crisp-edges; cursor: grab; }
+html[data-ui-style="minimal"] .pixel-pet, html[data-ui-style="crowded"] .pixel-pet { --pet-size: 96px; }
+html:is([data-ui-style="glass"], [data-ui-style="liquid"], [data-ui-style="simple"]) .pixel-pet { filter: drop-shadow(0 10px 14px rgba(0,0,0,.3)); }
+.bongo-container { width: 300px; height: 190px; cursor: grab; }
 #bongoCat { width: 100%; height: 100%; overflow: visible; }
 html[data-ui-style="pixel"] #bongoCat { shape-rendering: crispEdges; }
+
+/* moved by pet-drag.js */
+.companion-perch.is-free { position: fixed; z-index: 50; margin: 0; }
+.companion-perch.is-held, .companion-perch.is-held * { cursor: grabbing; }
+.companion-perch.is-held { filter: drop-shadow(0 14px 0 color-mix(in srgb, var(--bg-deep) 45%, transparent)); }
+.companion-perch.near-home { outline: 3px dashed var(--accent); outline-offset: 6px; }
+body.pet-dragging { user-select: none; }
 
 /* ==========================================================================
    SEARCH
@@ -954,43 +972,102 @@ html[data-ui-style="pixel"] :is(.theme-active-dot, .dot), html[data-ui-style="cr
 .tile { padding: 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .tile-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .tile-title { font-size: 1rem; font-weight: 700; color: var(--ink); }
-html[data-ui-style="pixel"] .tile-title::before { content: '▸ '; color: var(--accent); }
 .tile-hint { font-size: .78rem; color: var(--ink-3); }
 .tile-action { height: 34px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 600; color: var(--ink-2); }
 .tile-action .svg-icon { width: 16px; height: 16px; }
 
-/* shortcuts */
+/* shortcuts: the default is a box per shortcut (used by Crowded) */
 .shortcuts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 14px; }
 .shortcut-item {
     position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
     min-height: 92px; padding: 12px 8px; text-decoration: none; color: var(--ink);
 }
-.shortcut-icon { display: inline-flex; color: var(--ink-2); transition: color .15s ease, transform .15s var(--ease); }
+.shortcut-icon { display: inline-flex; color: var(--ink-2); transition: color .15s ease, transform .15s var(--ease), box-shadow .15s var(--ease); }
 .shortcut-icon .svg-icon { width: 30px; height: 30px; }
-.shortcut-item:hover .shortcut-icon { color: var(--brand, var(--accent)); transform: translateY(-2px); }
-html[data-ui-style="pixel"] .shortcut-item:hover .shortcut-icon { transform: translateY(-4px); }
+.shortcut-item:hover .shortcut-icon { color: var(--brand, var(--accent)); }
 .shortcut-title { font-size: .85rem; font-weight: 600; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.shortcut-actions { position: absolute; top: 4px; right: 4px; display: flex; gap: 2px; opacity: 0; transition: opacity .15s ease; }
+.shortcut-actions { position: absolute; top: -8px; right: -6px; display: flex; gap: 2px; opacity: 0; transition: opacity .15s ease; z-index: 2; }
 .shortcut-item:hover .shortcut-actions, .shortcut-item:focus-within .shortcut-actions { opacity: 1; }
-.action-shortcut-btn { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--fill); color: var(--ink-2); }
+.action-shortcut-btn { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); background: var(--fill); color: var(--ink-2); box-shadow: 0 0 0 2px var(--bg-deep); }
 .action-shortcut-btn .svg-icon { width: 14px; height: 14px; }
 .action-shortcut-btn.edit:hover { color: var(--accent); }
 .action-shortcut-btn.delete:hover { color: var(--hot); }
 .shortcut-item.dragging { opacity: .4; }
-.shortcut-item.drag-over { box-shadow: var(--ctl-shadow-hover), 0 0 0 2px var(--accent); }
+
+/* The hotbar: every style but Crowded. One slot per shortcut, label underneath,
+   number key in the corner, and an empty slot at the end to add one. */
+html:not([data-ui-style="crowded"]) .tile-links {
+    background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none;
+    padding: 0; margin-top: 28px;
+    display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 16px 14px;
+}
+html:not([data-ui-style="crowded"]) :is(.tile-links .tile-head, .shortcuts-grid) { display: contents; }
+html:not([data-ui-style="crowded"]) .tile-links .tile-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+html:not([data-ui-style="crowded"]) .shortcut-item {
+    width: 72px; min-height: 0; padding: 0; gap: 8px;
+    background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+html:not([data-ui-style="crowded"]) .shortcut-item:hover, html:not([data-ui-style="crowded"]) .shortcut-item:active { box-shadow: none; transform: none; }
+html:not([data-ui-style="crowded"]) .shortcut-icon,
+html:not([data-ui-style="crowded"]) .tile-links .tile-action {
+    width: 64px; height: 64px; align-items: center; justify-content: center;
+    background: var(--ctl); border: var(--ctl-border); box-shadow: var(--ctl-shadow); border-radius: var(--radius-sm);
+}
+html:not([data-ui-style="crowded"]) .shortcut-item:hover .shortcut-icon,
+html:not([data-ui-style="crowded"]) .tile-links .tile-action:hover { box-shadow: var(--ctl-shadow-hover); transform: translateY(-3px); }
+html:not([data-ui-style="crowded"]) .shortcut-item:active .shortcut-icon { transform: var(--ctl-press); }
+html:not([data-ui-style="crowded"]) .shortcut-title { font-size: .8rem; font-weight: 500; color: var(--ink-2); }
+html:not([data-ui-style="crowded"]) .shortcut-item:hover .shortcut-title { color: var(--ink); }
+html:not([data-ui-style="crowded"]) .tile-links .tile-action { order: 99; padding: 0; font-size: 0; gap: 0; color: var(--ink-3); }
+html:not([data-ui-style="crowded"]) .tile-links .tile-action .svg-icon { width: 22px; height: 22px; }
+.shortcut-item[data-key]::before {
+    content: attr(data-key); position: absolute; top: 4px; left: 7px; z-index: 1;
+    font-family: var(--font-clock); font-size: .8rem; line-height: 1; color: var(--ink-3); pointer-events: none;
+}
+html[data-ui-style="pixel"] .shortcut-item[data-key]::before { font-size: 1.05rem; top: 5px; left: 8px; }
+html[data-ui-style="minimal"] .shortcut-item[data-key]::before { content: none; }
+
+/* Pixel slots are sunk into the page, like an inventory */
+html[data-ui-style="pixel"] .shortcut-icon,
+html[data-ui-style="pixel"] .tile-links .tile-action {
+    background: color-mix(in srgb, var(--bg-deep) 55%, var(--bg));
+    box-shadow: 0 0 0 3px var(--bg-deep),
+        inset 3px 3px 0 0 color-mix(in srgb, var(--bg-deep) 70%, transparent),
+        inset -3px -3px 0 0 color-mix(in srgb, var(--cat-text) 8%, transparent);
+}
+html[data-ui-style="pixel"] .shortcut-item:hover .shortcut-icon,
+html[data-ui-style="pixel"] .tile-links .tile-action:hover {
+    box-shadow: 0 0 0 3px var(--accent),
+        inset 3px 3px 0 0 color-mix(in srgb, var(--bg-deep) 70%, transparent),
+        inset -3px -3px 0 0 color-mix(in srgb, var(--cat-text) 8%, transparent);
+}
+html[data-ui-style="minimal"] .shortcut-icon, html[data-ui-style="minimal"] .tile-links .tile-action { background: none; box-shadow: none; border: 0; }
+html[data-ui-style="minimal"] .shortcut-item:hover .shortcut-icon { background: color-mix(in srgb, var(--ink) 7%, transparent); transform: none; }
 
 /* bookmark shape setting */
-html[data-shortcut-shape="oval"] .shortcuts-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-html[data-shortcut-shape="oval"] .shortcut-item { flex-direction: row; justify-content: flex-start; min-height: 52px; padding: 0 14px; }
-html[data-shortcut-shape="oval"] .shortcut-icon .svg-icon { width: 22px; height: 22px; }
-html[data-shortcut-shape="oval"]:not([data-ui-style="pixel"]) .shortcut-item { border-radius: 999px; }
-html[data-shortcut-shape="circle"] .shortcut-item { border-radius: 0; background: none; box-shadow: none; border: 0; }
-html[data-shortcut-shape="circle"] .shortcut-icon { width: 60px; height: 60px; align-items: center; justify-content: center; background: var(--ctl); border: var(--ctl-border); box-shadow: var(--ctl-shadow); border-radius: 50%; }
-html[data-ui-style="pixel"][data-shortcut-shape="circle"] .shortcut-icon {
-    border-radius: 0;
+html:not([data-ui-style="crowded"])[data-shortcut-shape="circle"] :is(.shortcut-icon, .tile-links .tile-action) { border-radius: 50%; }
+html[data-ui-style="pixel"][data-shortcut-shape="circle"] :is(.shortcut-icon, .tile-links .tile-action) {
+    border-radius: 0; box-shadow: none; background: color-mix(in srgb, var(--bg-deep) 70%, var(--bg));
     clip-path: polygon(30% 0, 70% 0, 70% 10%, 90% 10%, 90% 30%, 100% 30%, 100% 70%, 90% 70%, 90% 90%, 70% 90%, 70% 100%, 30% 100%, 30% 90%, 10% 90%, 10% 70%, 0 70%, 0 30%, 10% 30%, 10% 10%, 30% 10%);
 }
-html[data-shortcut-shape="square"]:not([data-ui-style="pixel"]) .shortcut-item { border-radius: 4px; }
+html:not([data-ui-style="pixel"])[data-shortcut-shape="square"] :is(.shortcut-icon, .tile-links .tile-action) { border-radius: 4px; }
+html:not([data-ui-style="crowded"])[data-shortcut-shape="oval"] .shortcut-item {
+    width: auto; height: 48px; flex-direction: row; gap: 10px; padding: 0 18px 0 14px;
+    background: var(--ctl); border: var(--ctl-border); box-shadow: var(--ctl-shadow); border-radius: 999px;
+}
+html:not([data-ui-style="crowded"])[data-shortcut-shape="oval"] .shortcut-item:hover { box-shadow: var(--ctl-shadow-hover); }
+html[data-ui-style="pixel"][data-shortcut-shape="oval"] .shortcut-item { border-radius: 0; }
+html:not([data-ui-style="crowded"])[data-shortcut-shape="oval"] .shortcut-icon { width: auto; height: auto; background: none; border: 0; box-shadow: none; clip-path: none; }
+html:not([data-ui-style="crowded"])[data-shortcut-shape="oval"] .shortcut-item:hover .shortcut-icon { box-shadow: none; transform: none; }
+html:not([data-ui-style="crowded"])[data-shortcut-shape="oval"] .shortcut-icon .svg-icon { width: 22px; height: 22px; }
+html:not([data-ui-style="crowded"])[data-shortcut-shape="oval"] .shortcut-title { font-size: .9rem; }
+html:not([data-ui-style="crowded"])[data-shortcut-shape="oval"] .tile-links .tile-action { width: 48px; height: 48px; border-radius: 999px; }
+html[data-ui-style="pixel"][data-shortcut-shape="oval"] .tile-links .tile-action { border-radius: 0; }
+html:not([data-ui-style="crowded"])[data-shortcut-shape="oval"] .shortcut-item[data-key]::before { content: none; }
+/* Crowded keeps boxes; the shape setting changes those */
+html[data-ui-style="crowded"][data-shortcut-shape="oval"] .shortcuts-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+html[data-ui-style="crowded"][data-shortcut-shape="oval"] .shortcut-item { flex-direction: row; justify-content: flex-start; min-height: 44px; padding: 0 14px; border-radius: 999px; }
+html[data-ui-style="crowded"][data-shortcut-shape="circle"] .shortcut-item { border-radius: 50%; aspect-ratio: 1; min-height: 0; }
 
 /* brand colour on hover */
 .shortcut-item[data-icon="youtube"] { --brand: #ff3b3b; }
@@ -1011,38 +1088,49 @@ html[data-shortcut-shape="square"]:not([data-ui-style="pixel"]) .shortcut-item {
 .shortcut-item[data-icon="amazon"] { --brand: #ff9900; }
 .shortcut-item[data-icon="perplexity"] { --brand: #20b8cd; }
 
-/* notes */
-.tile-notes { min-height: 220px; }
+/* notes: a small card pinned bottom-right */
+.tile-notes { width: 260px; min-height: 0; gap: 8px; }
 .notes-area {
-    flex: 1; width: 100%; min-height: 150px; resize: none;
+    flex: 1; width: 100%; min-height: 128px; resize: none;
     background: transparent; border: 0; outline: none;
-    font-size: .98rem; line-height: 1.6; color: var(--ink); user-select: text;
+    font-size: .95rem; line-height: 1.6; color: var(--ink); user-select: text;
 }
 .notes-area::placeholder { color: var(--ink-3); }
+.tile-notes .tile-hint { display: none; }
+
+/* Pixel: the note is a sticky note, taped to the page */
+html[data-ui-style="pixel"] .tile-notes {
+    --paper: color-mix(in srgb, var(--cat-yellow, #f9e2af) 88%, #ffffff);
+    --paper-ink: #3b3427;
+    position: relative; padding: 18px 16px 12px;
+    background: var(--paper);
+    box-shadow: 0 0 0 3px var(--bg-deep), 6px 6px 0 0 color-mix(in srgb, var(--bg-deep) 60%, transparent),
+        inset -3px -3px 0 0 color-mix(in srgb, #000 10%, transparent);
+}
+html[data-ui-style="pixel"] .tile-notes::before {
+    content: ''; position: absolute; top: -9px; left: 50%; width: 64px; height: 15px; transform: translateX(-50%);
+    background: color-mix(in srgb, var(--cat-text) 55%, transparent);
+}
+html[data-ui-style="pixel"] .tile-notes .tile-title { color: var(--paper-ink); font-size: .95rem; }
 html[data-ui-style="pixel"] .notes-area {
-    background-image: repeating-linear-gradient(to bottom, transparent 0 calc(1.6em - 2px), color-mix(in srgb, var(--line-2) 55%, transparent) calc(1.6em - 2px) 1.6em);
+    color: var(--paper-ink);
+    background-image: repeating-linear-gradient(to bottom, transparent 0 calc(1.6em - 2px), color-mix(in srgb, var(--paper-ink) 14%, transparent) calc(1.6em - 2px) 1.6em);
     background-attachment: local;
 }
+html[data-ui-style="pixel"] .notes-area::placeholder { color: color-mix(in srgb, var(--paper-ink) 45%, transparent); }
 
 /* ==========================================================================
    STYLE LAYOUTS
    ========================================================================== */
-/* Minimal: clock, pet, search and a quiet row of icons. Notes and quote step aside. */
-html[data-ui-style="minimal"] .desk { grid-template-rows: auto auto auto 1fr; align-content: center; justify-items: center; }
-html[data-ui-style="minimal"] .desk-top { flex-direction: column; align-items: center; width: 100%; }
-html[data-ui-style="minimal"] .clock-block { align-items: center; order: 2; margin-top: 6vh; }
-html[data-ui-style="minimal"] .clock-meta { justify-content: center; }
-html[data-ui-style="minimal"] .desk-controls { position: fixed; top: 20px; right: 24px; flex-direction: row-reverse; align-items: center; opacity: .55; transition: opacity .3s ease; z-index: 40; }
-html[data-ui-style="minimal"] .desk-controls:hover, html[data-ui-style="minimal"] .desk-controls:focus-within { opacity: 1; }
-html[data-ui-style="minimal"] .weather-widget { height: 44px; }
+/* Minimal: clock, pet, search and a quiet row of icons. Notes and quote step aside,
+   the corners fade until you reach for them. */
+html[data-ui-style="minimal"] :is(.tile-notes, .desk-foot) { display: none; }
+html[data-ui-style="minimal"] :is(.weather-widget-container, .tool-row) { opacity: .45; transition: opacity .3s ease; }
+html[data-ui-style="minimal"] :is(.weather-widget-container, .tool-row):is(:hover, :focus-within, .open) { opacity: 1; }
+html[data-ui-style="minimal"] .weather-widget { background: none; box-shadow: none; border: 0; }
 html[data-ui-style="minimal"] .search-form { border-bottom: 1px solid var(--line-2); border-radius: 0; }
 html[data-ui-style="minimal"] .search-submit-btn { background: transparent; color: var(--ink-2); }
-html[data-ui-style="minimal"] .desk-grid { grid-template-columns: 1fr; width: min(760px, 100%); }
-html[data-ui-style="minimal"] .tile-head, html[data-ui-style="minimal"] .tile-notes, html[data-ui-style="minimal"] .desk-foot { display: none; }
-html[data-ui-style="minimal"] .tile { padding: 0; }
-html[data-ui-style="minimal"] .shortcuts-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
-html[data-ui-style="minimal"] .shortcut-item { min-height: 0; width: 76px; padding: 10px 4px; }
-html[data-ui-style="minimal"] .shortcut-title { font-weight: 400; color: var(--ink-2); font-size: .78rem; }
+html[data-ui-style="minimal"] .tile-links { margin-top: 20px; gap: 10px 4px; }
 
 /* Crowded: one dense board, every widget boxed */
 html[data-ui-style="crowded"] .desk {
@@ -1056,7 +1144,11 @@ html[data-ui-style="crowded"] .desk {
         "foot    foot   foot";
 }
 html[data-ui-style="crowded"] .desk-top, html[data-ui-style="crowded"] .desk-grid { display: contents; }
-html[data-ui-style="crowded"] .clock-block { grid-area: clock; background: var(--panel); border: var(--panel-border); border-radius: var(--radius); padding: 18px; justify-content: center; }
+html[data-ui-style="crowded"] .clock-block { grid-area: clock; background: var(--panel); border: var(--panel-border); border-radius: var(--radius); padding: 18px; justify-content: center; align-items: flex-start; text-align: left; margin: 0; }
+html[data-ui-style="crowded"] .clock-meta { justify-content: flex-start; }
+html[data-ui-style="crowded"] .tile-notes { width: auto; justify-self: stretch; align-self: stretch; }
+html[data-ui-style="crowded"] .tile-notes .tile-hint { display: inline; }
+html[data-ui-style="crowded"] .desk-foot { max-width: none; justify-self: stretch; }
 html[data-ui-style="crowded"] .desk-controls { grid-area: ctrl; background: var(--panel); border: var(--panel-border); border-radius: var(--radius); padding: 14px; align-items: stretch; justify-content: space-between; }
 html[data-ui-style="crowded"] .weather-widget { width: 100%; height: auto; padding: 12px; }
 html[data-ui-style="crowded"] .weather-popup-card { display: block; position: static; width: auto; margin-top: 8px; padding: 10px 12px; background: transparent; border: 1px dashed var(--line); }
@@ -1169,13 +1261,33 @@ html[data-ui-style="pixel"] .slider, html[data-ui-style="pixel"] .slider::before
 @media (max-width: 1000px) {
     html[data-ui-style="crowded"] .desk { grid-template-columns: 1fr 1fr; grid-template-areas: "clock ctrl" "search search" "links links" "notes notes" "foot foot"; }
 }
-@media (max-width: 820px) {
-    .desk { width: calc(100% - 32px); padding-top: 24px; }
-    .desk-top { flex-direction: column-reverse; align-items: stretch; }
-    .desk-controls { align-items: flex-start; }
-    .tool-row { flex-wrap: wrap; }
-    .desk-grid { grid-template-columns: 1fr; }
-    html[data-ui-style="crowded"] .desk { grid-template-columns: 1fr; grid-template-areas: "clock" "ctrl" "search" "links" "notes" "foot"; }
+/* Narrow windows and portrait monitors: one column. The clock gets more room,
+   notes drop in under the shortcuts. */
+@media (max-width: 900px), (orientation: portrait) {
+    html:not([data-ui-style="crowded"]) .desk {
+        width: min(760px, 100% - 40px);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto minmax(24px, 1fr) auto auto auto auto minmax(24px, 1fr) auto;
+        grid-template-areas:
+            "wx     ctrl"
+            ".      .   "
+            "clock  clock"
+            "search search"
+            "links  links"
+            "notes  notes"
+            ".      .   "
+            "foot   foot";
+    }
+    html:not([data-ui-style="crowded"]) .tile-notes { justify-self: center; align-self: start; width: min(420px, 100%); margin-top: clamp(28px, 5vh, 64px); }
+    html:not([data-ui-style="crowded"]) .desk-foot { justify-self: center; justify-content: center; text-align: center; }
+    html:not([data-ui-style="crowded"]) .clock-block { margin-bottom: clamp(24px, 6vh, 80px); }
+    html[data-ui-style="crowded"] .desk { grid-template-columns: 1fr; grid-template-areas: "clock" "ctrl" "search" "links" "notes" "foot"; align-content: center; }
+}
+@media (max-width: 560px) {
+    html:not([data-ui-style="crowded"]) .desk { grid-template-areas: "ctrl ctrl" "wx wx" "." "clock clock" "search search" "links links" "notes notes" "." "foot foot"; }
+    html:not([data-ui-style="crowded"]) .tool-row { justify-self: stretch; flex-wrap: wrap; justify-content: flex-end; }
+    html:not([data-ui-style="crowded"]) .weather-widget-container { margin-top: 12px; }
+    .engine-current { padding: 0 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -1183,7 +1295,7 @@ html[data-ui-style="pixel"] .slider, html[data-ui-style="pixel"] .slider::before
 
 /* Bongo cat (SVG) colours */
 /* Bongo Cat SVG Element Colors & Styles */
-.desk-top { fill: var(--cat-surface1); stroke: var(--cat-surface2); stroke-width: 2; }
+#bongoCat .desk-top { fill: var(--cat-surface1); stroke: var(--cat-surface2); stroke-width: 2; }
 .desk-leg { fill: var(--cat-surface0); }
 
 .laptop-base { fill: var(--cat-surface2); }
@@ -1227,9 +1339,9 @@ html[data-ui-style="pixel"] .slider, html[data-ui-style="pixel"] .slider::before
 .hidden { display: none !important; }
 
 
-/* Crowded: tighter rows; bookmark shapes keep their own column width */
 html[data-ui-style="crowded"] .desk { grid-template-rows: auto auto auto auto; align-content: start; }
-html[data-ui-style="crowded"][data-shortcut-shape="oval"] .shortcuts-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-html[data-ui-style="crowded"][data-shortcut-shape="oval"] .shortcut-item { min-height: 44px; }
-html[data-ui-style="crowded"] .tile-notes { min-height: 0; }
 html[data-ui-style="pixel"] .weather-temp, html[data-ui-style="crowded"] .weather-temp { font-family: var(--font-clock); font-size: 1.6rem; font-weight: 400; line-height: .9; }
+html[data-ui-style="pixel"] .desk-foot {
+    padding: 8px 12px; color: var(--ink-2);
+    background: var(--bg-deep); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cat-text) 8%, var(--bg-deep));
+}

@@ -13,7 +13,7 @@ Any style works with any theme.
 
 | Style | What it looks like |
 |---|---|
-| Pixel | Chunky 8-bit panels, notched corners, hard drop shadows, a dithered sky. This is the default. |
+| Pixel | An LCD clock, a night sky and a village on the horizon, inventory slots for shortcuts, and a sticky note. This is the default. |
 | Minimal | Only the clock, the search bar and a quiet row of shortcuts. The tools fade out until you hover them. |
 | Glass | Frosted panels over soft pools of colour. |
 | Liquid | Glass with rounder shapes and colour that slowly drifts. |
@@ -38,28 +38,34 @@ There are 16:
 
 ## Pets
 
-![The six pixel pets](docs/pets.gif)
+![The four pixel pets](docs/pets.gif)
 
-The pets are drawn in pixel art on a canvas. Each one blinks, breathes and has its own small move:
+There are four hand-drawn pets: a ginger cat, a black cat, a shiba and a bunny.
 
-- Cat: swishes its tail.
-- Dog: wags its tail and pants.
-- Panda: has a blinking eye glint.
-- Bunny: wiggles its ears.
-- Giraffe: sways its neck.
-- Whale: floats and spouts.
+- They blink, breathe, flick their tails and twitch their ears.
+- Leave the tab alone for a while and your pet falls asleep. Move the mouse or type and it wakes up.
+- Click it and it hops.
+- Drag it anywhere on the page and it stays there.
+- Double-click it, or drop it back on the search bar, to send it home.
 
-Click a pet to make it hop. The pets recolour themselves to match the theme. The old SVG Bongo Cat is still in the list, and you can also pick none.
+The old SVG Bongo Cat is still in the list, and you can pick none.
+
+## Portrait screens
+
+The layout is a single column, so it also works on a vertical monitor.
+
+<img src="docs/portrait.jpg" alt="Pixel style on a portrait monitor" width="360">
 
 ## Everything else
 
 - Clock (12h or 24h, any timezone), date and greeting
 - Weather for any city. It uses Open-Meteo, so no key is needed.
 - Search across several engines
-- Shortcuts with brand icons:
+- Shortcuts in a hotbar:
+  - keys 1 to 9 open them
   - drag to reorder them
   - edit or delete them on hover
-  - choose oval, rounded, circle or square
+  - choose rounded, square, circle or pill
 - Notes, saved on this device
 - Background image, video or YouTube link
 - Star particles and ambient sounds
@@ -81,4 +87,6 @@ The fonts are bundled in `fonts/`, so the page doesn't need Google Fonts and loo
 | `style.css` | The themes (`data-theme`) and the interface styles (`data-ui-style`) |
 | `ui-style.js` | The style switcher. It loads in `<head>` so the page doesn't flash. |
 | `pixel-pets.js` | The sprites and their animation |
+| `pet-drag.js` | Moving the pet around |
+| `desk.js` | The LCD clock, the pixel horizon and the number keys |
 | `script.js` | Everything else: clock, weather, search, shortcuts, notes, settings and background |
